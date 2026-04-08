@@ -4,6 +4,7 @@ import { ArrowUp, ArrowDown, TrendUp, Users, ShoppingCart, CurrencyDollar } from
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { toast } from 'sonner';
 import Leaderboard from '../components/Leaderboard';
+import DatabaseStatus from '../components/DatabaseStatus';
 import { useAuth } from '../context/AuthContext';
 
 const Dashboard = () => {
@@ -203,7 +204,8 @@ const Dashboard = () => {
       </div>
 
       {user?.role === 'admin' && (
-        <div className="mt-8">
+        <div className="mt-8 space-y-8">
+          <DatabaseStatus />
           <Leaderboard />
         </div>
       )}

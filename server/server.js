@@ -15,6 +15,7 @@ const targetRoutes = require('./routes/targetRoutes');
 const leaderboardRoutes = require('./routes/leaderboardRoutes');
 const segmentationRoutes = require('./routes/segmentationRoutes');
 const reportRoutes = require('./routes/reportRoutes');
+const databaseRoutes = require('./routes/databaseRoutes');
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use('/api/targets', targetRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/segmentation', segmentationRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/database', databaseRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
