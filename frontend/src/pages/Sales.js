@@ -231,7 +231,8 @@ const Sales = () => {
               </div>
             </form>
           </DialogContent>
-        </Dialog>
+          </Dialog>
+        </div>
       </div>
 
       <div className="bg-zinc-900 border border-white/10 rounded-lg overflow-hidden">
