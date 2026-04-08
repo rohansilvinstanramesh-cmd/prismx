@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const connectDB = require('./config/db');
 require('dotenv').config();
 
@@ -16,6 +17,7 @@ const leaderboardRoutes = require('./routes/leaderboardRoutes');
 const segmentationRoutes = require('./routes/segmentationRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const databaseRoutes = require('./routes/databaseRoutes');
+const profileRoutes = require('./routes/profileRoutes');
 
 const app = express();
 
@@ -28,6 +30,9 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'PrismX API is running' });
@@ -46,6 +51,7 @@ app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/segmentation', segmentationRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/database', databaseRoutes);
+app.use('/api/profile', profileRoutes);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

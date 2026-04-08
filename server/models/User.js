@@ -25,6 +25,15 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'https://images.unsplash.com/photo-1652471943570-f3590a4e52ed?w=200',
   },
+  phone: {
+    type: String,
+  },
+  bio: {
+    type: String,
+  },
+  location: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

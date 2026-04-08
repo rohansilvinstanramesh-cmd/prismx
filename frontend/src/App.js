@@ -11,6 +11,7 @@ import GeoMap from './pages/GeoMap';
 import AIAdvisor from './pages/AIAdvisor';
 import Forecast from './pages/Forecast';
 import Targets from './pages/Targets';
+import Profile from './pages/Profile';
 import Sidebar from './components/Sidebar';
 import NotificationCenter from './components/NotificationCenter';
 import './App.css';
@@ -132,6 +133,16 @@ function App() {
               <ProtectedRoute>
                 <DashboardLayout>
                   <Targets />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Profile />
                 </DashboardLayout>
               </ProtectedRoute>
             }

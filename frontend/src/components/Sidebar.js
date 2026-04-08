@@ -69,13 +69,17 @@ const Sidebar = () => {
       </nav>
 
       <div className="p-4 border-t border-white/10">
-        <div className="flex items-center gap-3 px-4 py-3 mb-2">
+        <Link
+          to="/profile"
+          className="flex items-center gap-3 px-4 py-3 mb-2 hover:bg-zinc-800 rounded-md transition-colors"
+          data-testid="profile-link"
+        >
           <UserCircle size={32} weight="fill" className="text-zinc-400" />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium text-white truncate">{user?.name}</p>
             <p className="text-xs text-zinc-500 uppercase tracking-wide">{user?.role?.replace('_', ' ')}</p>
           </div>
-        </div>
+        </Link>
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-4 py-2.5 text-zinc-400 hover:text-white hover:bg-zinc-800/50 rounded-md transition-all"
