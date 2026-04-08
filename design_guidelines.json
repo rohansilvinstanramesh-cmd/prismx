@@ -1,0 +1,90 @@
+{
+  "project_name": "PrismX",
+  "theme": "dark",
+  "archetype": "Archetype 4 (Swiss & High-Contrast) + Dark Analytics",
+  "domain": "Business Intelligence & Analytics Dashboard",
+  "typography": {
+    "heading_font": "Outfit",
+    "body_font": "IBM Plex Sans",
+    "mono_font": "JetBrains Mono",
+    "rules": [
+      "DO NOT use Inter or generic Sans for headings.",
+      "Headings (Size > 32px) MUST use tight letter spacing (tracking-tight or tracking-tighter).",
+      "Overlines/Labels MUST be Uppercase + Tiny + Wide Spacing (tracking-[0.2em]).",
+      "Line Height: Tight (leading-none) for headers, Loose (leading-relaxed) for body.",
+      "Never center align by default; rely on strict left alignment for data and tables."
+    ]
+  },
+  "colors": {
+    "background_dark": "#09090B",
+    "surface_dark": "#18181B",
+    "border_subtle": "rgba(255, 255, 255, 0.1)",
+    "text_primary": "#FFFFFF",
+    "text_secondary": "#A1A1AA",
+    "primary_gradient": "bg-gradient-to-br from-indigo-500 to-purple-600",
+    "accent_indigo": "#4338CA",
+    "accent_purple": "#7E22CE",
+    "rules": [
+      "No generic full-screen gradients. Apply the blue/purple gradient strategically (e.g., active buttons, 'Tracing Beam' borders, or subtle glows).",
+      "Never use pure #000000. Always tint neutral greys (e.g., Zinc scale).",
+      "Hover states MUST explicitly set text color and have higher contrast than default states."
+    ]
+  },
+  "layout": {
+    "type": "sidebar_dashboard",
+    "grid_strategy": "The 'Control Room' Grid (Base: grid-cols-1 md:grid-cols-3 lg:grid-cols-4). Tight gaps (gap-4 or gap-6).",
+    "spacing": "Generous internal padding for cards (p-6) to prevent text collision with borders.",
+    "sidebar": "Fixed left sidebar, dark surface, high-contrast active links with an indigo left-border accent.",
+    "topbar": "Sticky header utilizing 'Crystal Glassmorphism': backdrop-blur-xl bg-zinc-950/60 border-b border-white/10."
+  },
+  "components": {
+    "cards": "Flat background (bg-zinc-900), 1px subtle border, no heavy shadow. Use 'The Grid Borders' look for dense data.",
+    "buttons": "Primary buttons use the blue/purple gradient with hover:brightness-110. Secondary buttons are transparent with a 1px border.",
+    "ai_advisor_panel": "Must stand out. Use 'The Tracing Beam' effect or a subtle background image with heavy overlay (bg-black/80) to feel 'smart' and distinct from standard data cards.",
+    "charts": "Recharts. Remove default cartesian grids. Use area charts with blue/purple gradient fills fading to transparent at the bottom.",
+    "tables": "Dense. Use Shadcn Table. No row background unless hovered (hover:bg-zinc-800/50).",
+    "general": "Use pure HTML + Tailwind for structural layouts. Use Shadcn for interactive logic (Dialogs, Dropdowns, Select) but customize heavily to match the dark theme."
+  },
+  "libraries": {
+    "icons": "@phosphor-icons/react",
+    "charts": "recharts",
+    "maps": "react-simple-maps",
+    "notifications": "sonner"
+  },
+  "media": {
+    "image_urls": [
+      {
+        "url": "https://images.unsplash.com/photo-1652471943570-f3590a4e52ed?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA4Mzl8MHwxfHNlYXJjaHwzfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMGhlYWRzaG90fGVufDB8fHx8MTc3NTYxMzg3MXww&ixlib=rb-4.1.0&q=85",
+        "description": "Professional business headshot (Man)",
+        "category": "user_avatar"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1689600944138-da3b150d9cb8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA4Mzl8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMGhlYWRzaG90fGVufDB8fHx8MTc3NTYxMzg3MXww&ixlib=rb-4.1.0&q=85",
+        "description": "Professional business headshot (Woman)",
+        "category": "agent_avatar"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1714548529197-537c1f0b6aa7?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA5ODh8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMG1lc2glMjBuZXR3b3JrJTIwZGFya3xlbnwwfHx8fDE3NzU2MTM4ODF8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Abstract mesh network dark background",
+        "category": "ai_advisor_bg"
+      }
+    ]
+  },
+  "testing": {
+    "rules": [
+      "All interactive and key informational elements MUST include a data-testid attribute (kebab-case, role-based)."
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Install required fonts: Outfit, IBM Plex Sans, and JetBrains Mono.",
+    "Setup Tailwind config to use these fonts and add the custom colors (obsidian/zinc tones, indigo/purple).",
+    "Build the Sidebar and Top Navbar layout first.",
+    "Implement the Dashboard view with KPI cards using grid-cols-1 md:grid-cols-3 lg:grid-cols-4.",
+    "Integrate Recharts for Sales and Customer Analytics. Style them minimally without heavy grid lines.",
+    "Create the AI Decision Advisor panel as a distinct section. Use the abstract background image (ai_advisor_bg) heavily darkened with a glassmorphism overlay, and the requested blue/purple gradient accent on its borders or title.",
+    "For the Geo Analytics map, use react-simple-maps or a similar library to render a dark-themed world map with scatter points indicating customer density.",
+    "Ensure all CRUD operations (Sales, Customer) utilize Shadcn Dialog/Table components and are wired to the backend API.",
+    "Ensure hover states have higher contrast and interactive elements are obvious.",
+    "Include data-testid attributes for robust automated testing."
+  ]
+}
