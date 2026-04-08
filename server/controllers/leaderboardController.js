@@ -44,22 +44,27 @@ const getLeaderboard = async (req, res) => {
       { $limit: 20 }
     ]);
     
-    const enrichedLeaderboard = await Promise.all(
-      leaderboard.map(async (entry, index) => {
-        const user = await User.findById(entry._id).select('avatar email');
-        return {
-          rank: index + 1,
-          agentId: entry._id,
-          agentName: entry.agentName,
-          avatar: user?.avatar,
-          email: user?.email,
-          totalSales: entry.totalSales,
-          revenue: entry.revenue,
-          avgDealSize: Math.round(entry.avgDealSize),
-          performance: Math.min(100, Math.round((entry.revenue / 500000) * 100)),
-        };
-      })
-    );
+    // Batch fetch all users at once to avoid N+1 query problem
+    const agentIds = leaderboard.map(entry => entry._id);
+    const users = await User.find({ _id: { $in: agentIds } }).select('avatar email');
+    
+    // Create a Map for O(1) lookup
+    const userMap = new Map(users.map(user => [user._id.toString(), user]));
+    
+    const enrichedLeaderboard = leaderboard.map((entry, index) => {
+      const user = userMap.get(entry._id.toString());
+      return {
+        rank: index + 1,
+        agentId: entry._id,
+        agentName: entry.agentName,
+        avatar: user?.avatar,
+        email: user?.email,
+        totalSales: entry.totalSales,
+        revenue: entry.revenue,
+        avgDealSize: Math.round(entry.avgDealSize),
+        performance: Math.min(100, Math.round((entry.revenue / 500000) * 100)),
+      };
+    });
     
     res.json(enrichedLeaderboard);
   } catch (error) {
