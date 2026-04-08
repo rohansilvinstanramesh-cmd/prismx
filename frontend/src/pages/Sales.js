@@ -45,6 +45,27 @@ const Sales = () => {
     }
   };
 
+  const handleDownload = async (format) => {
+    try {
+      const response = await api.get(`/reports/sales/${format}`, {
+        responseType: 'blob',
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `sales_report.${format}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      
+      toast.success(`Report downloaded as ${format.toUpperCase()}`);
+    } catch (error) {
+      toast.error(`Failed to download ${format.toUpperCase()} report`);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -116,22 +137,30 @@ const Sales = () => {
           <p className="text-zinc-400 text-base">Manage your sales records</p>
         </div>
         <div className="flex gap-3">
-          <a
-            href={`${process.env.REACT_APP_BACKEND_URL}/api/reports/sales/csv`}
+          <button
+            onClick={() => handleDownload('csv')}
             className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors flex items-center gap-2"
             data-testid="export-csv-button"
           >
             <DownloadSimple size={20} />
-            Export CSV
-          </a>
-          <a
-            href={`${process.env.REACT_APP_BACKEND_URL}/api/reports/sales/pdf`}
-            className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors flex items-center gap-2"
+            CSV
+          </button>
+          <button
+            onClick={() => handleDownload('excel')}
+            className="px-4 py-2 bg-emerald-800 text-white rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2"
+            data-testid="export-excel-button"
+          >
+            <DownloadSimple size={20} />
+            Excel
+          </button>
+          <button
+            onClick={() => handleDownload('pdf')}
+            className="px-4 py-2 bg-red-800 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
             data-testid="export-pdf-button"
           >
             <DownloadSimple size={20} />
-            Export PDF
-          </a>
+            PDF
+          </button>
           <Dialog
             open={isDialogOpen}
             onOpenChange={(open) => {

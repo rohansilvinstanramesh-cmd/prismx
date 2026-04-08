@@ -1,5 +1,6 @@
 const PDFDocument = require('pdfkit');
 const { createObjectCsvWriter } = require('csv-writer');
+const ExcelJS = require('exceljs');
 const Sale = require('../models/Sale');
 const Customer = require('../models/Customer');
 const path = require('path');
@@ -155,8 +156,109 @@ const exportCustomersToCSV = async (req, res) => {
   }
 };
 
+const exportSalesToExcel = async (req, res) => {
+  try {
+    let query = {};
+    if (req.user.role === 'sales_agent') {
+      query.agentId = req.user._id;
+    }
+    
+    const sales = await Sale.find(query).sort({ date: -1 });
+    
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Sales Report');
+    
+    worksheet.columns = [
+      { header: 'Customer', key: 'customerName', width: 25 },
+      { header: 'Product', key: 'product', width: 25 },
+      { header: 'Amount', key: 'amount', width: 15 },
+      { header: 'Region', key: 'region', width: 20 },
+      { header: 'Status', key: 'status', width: 15 },
+      { header: 'Agent', key: 'agentName', width: 20 },
+      { header: 'Date', key: 'date', width: 15 },
+      { header: 'Quarter', key: 'quarter', width: 15 },
+    ];
+    
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: '6366f1' }
+    };
+    
+    sales.forEach(sale => {
+      worksheet.addRow({
+        customerName: sale.customerName,
+        product: sale.product,
+        amount: sale.amount,
+        region: sale.region,
+        status: sale.status,
+        agentName: sale.agentName,
+        date: new Date(sale.date).toLocaleDateString(),
+        quarter: sale.quarter,
+      });
+    });
+    
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=sales_report.xlsx');
+    
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const exportCustomersToExcel = async (req, res) => {
+  try {
+    const customers = await Customer.find().sort({ totalPurchases: -1 });
+    
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Customers Report');
+    
+    worksheet.columns = [
+      { header: 'Name', key: 'name', width: 25 },
+      { header: 'Email', key: 'email', width: 30 },
+      { header: 'Company', key: 'company', width: 25 },
+      { header: 'Region', key: 'region', width: 20 },
+      { header: 'Status', key: 'status', width: 15 },
+      { header: 'Total Purchases', key: 'totalPurchases', width: 18 },
+      { header: 'Last Purchase', key: 'lastPurchase', width: 18 },
+    ];
+    
+    worksheet.getRow(1).font = { bold: true };
+    worksheet.getRow(1).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: '6366f1' }
+    };
+    
+    customers.forEach(customer => {
+      worksheet.addRow({
+        name: customer.name,
+        email: customer.email,
+        company: customer.company || '',
+        region: customer.region,
+        status: customer.status,
+        totalPurchases: customer.totalPurchases,
+        lastPurchase: customer.lastPurchase ? new Date(customer.lastPurchase).toLocaleDateString() : 'N/A',
+      });
+    });
+    
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', 'attachment; filename=customers_report.xlsx');
+    
+    await workbook.xlsx.write(res);
+    res.end();
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   exportSalesToCSV,
   exportSalesToPDF,
   exportCustomersToCSV,
+  exportSalesToExcel,
+  exportCustomersToExcel,
 };

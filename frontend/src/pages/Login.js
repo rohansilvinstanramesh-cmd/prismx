@@ -151,15 +151,6 @@ const Login = () => {
               {loading ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
             </button>
           </form>
-
-          <div className="mt-6 pt-6 border-t border-white/10">
-            <p className="text-sm text-zinc-400 text-center">
-              Demo Credentials: <br />
-              <span className="text-zinc-300 font-mono text-xs">
-                admin@prismx.com / admin123
-              </span>
-            </p>
-          </div>
         </div>
       </div>
     </div>

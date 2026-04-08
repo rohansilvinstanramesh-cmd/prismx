@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../utils/api';
 import { toast } from 'sonner';
-import { Plus, Pencil, Trash } from '@phosphor-icons/react';
+import { Plus, Pencil, Trash, DownloadSimple } from '@phosphor-icons/react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../components/ui/dialog';
 import { Button } from '../components/ui/button';
 
@@ -31,6 +31,28 @@ const Customers = () => {
       toast.error('Failed to load customers');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDownload = async (format) => {
+    try {
+      const response = await api.get(`/reports/customers/${format}`, {
+        responseType: 'blob',
+      });
+      
+      const extension = format === 'excel' ? 'xlsx' : format;
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `customers_report.${extension}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+      
+      toast.success(`Customers report downloaded as ${format.toUpperCase()}`);
+    } catch (error) {
+      toast.error(`Failed to download ${format.toUpperCase()} report`);
     }
   };
 
@@ -104,10 +126,30 @@ const Customers = () => {
           <h1 className="text-4xl font-heading font-bold tracking-tight mb-2">Customers</h1>
           <p className="text-zinc-400 text-base">Manage your customer database</p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={(open) => {
-          setIsDialogOpen(open);
-          if (!open) resetForm();
-        }}>
+        <div className="flex gap-3">
+          <button
+            onClick={() => handleDownload('csv')}
+            className="px-4 py-2 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors flex items-center gap-2"
+            data-testid="export-customers-csv"
+          >
+            <DownloadSimple size={20} />
+            CSV
+          </button>
+          <button
+            onClick={() => handleDownload('excel')}
+            className="px-4 py-2 bg-emerald-800 text-white rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2"
+            data-testid="export-customers-excel"
+          >
+            <DownloadSimple size={20} />
+            Excel
+          </button>
+          <Dialog
+            open={isDialogOpen}
+            onOpenChange={(open) => {
+              setIsDialogOpen(open);
+              if (!open) resetForm();
+            }}
+          >
           <DialogTrigger asChild>
             <Button className="bg-gradient-to-br from-indigo-500 to-purple-600 hover:brightness-110" data-testid="add-customer-button">
               <Plus size={20} weight="bold" className="mr-2" />
@@ -209,7 +251,8 @@ const Customers = () => {
               </div>
             </form>
           </DialogContent>
-        </Dialog>
+          </Dialog>
+        </div>
       </div>
 
       <div className="bg-zinc-900 border border-white/10 rounded-lg overflow-hidden">
